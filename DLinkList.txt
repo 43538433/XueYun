@@ -1,0 +1,234 @@
+//实现双链表
+#include<stdio.h>
+#include<stdlib.h>
+#include<iostream>
+#define OK 1;
+#define ERROR 0;
+#define TURE 1;
+#define FALSE 0;
+int k = 1;
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
+#pragma warning(disable:4996);
+
+typedef float ElemType;
+typedef int Status;
+typedef struct node {
+	struct node *prior;//数据存放域
+	ElemType data;//前驱指针存放域
+	struct node *next;//后驱指针存放域
+}DLnode, *DLinkList;
+
+Status InitDLinkList(DLinkList *head, DLinkList *tail) {
+	(*head) = (DLinkList)malloc(sizeof(DLnode));
+	(*tail) = (DLinkList)malloc(sizeof(DLnode));
+	if (!(*head) || !(*tail)) {
+		return ERROR;
+	}
+	(*head)->prior = NULL;
+	(*tail)->next = NULL;
+	//链表为空时让头指向尾
+	(*head)->next = (*tail);
+	(*tail)->prior = (*head);
+	return OK;
+}
+
+/*链表判空*/
+Status EmptyLinkList(DLinkList head, DLinkList tail) {
+	if (head->next == tail) {
+		return TURE;
+	}
+	else {
+		return FALSE;
+	}
+}
+
+/*测量链表的长度*/
+int DListLength(DLinkList head, DLinkList tail) {
+	int i = 0;
+	DLinkList p = head->next;
+	while (p != tail) {
+		i++;
+		p = p->next;
+	}
+	return i;
+}
+
+/*在双向链表的第i个结点插入元素data*/
+Status TailInsertDLinkList(DLinkList head, DLinkList tail, int i, ElemType data) {
+	DLinkList p = head->next;
+	DLinkList s;
+	int count = 0;
+	if (i<0 || i>DListLength(head,tail) + 1) {
+		return ERROR;
+	}
+	while (count < i - 1) {
+		p = p->next;
+		count++;
+	}
+	s = (DLinkList)malloc(sizeof(DLnode));
+	if (!s) {
+		return ERROR;
+	}
+	s->data = data;//为结点添加数值
+	s->next = NULL;
+	s->prior = NULL;
+
+	s->prior = p->prior;      //s的前驱指针指向原来p的前一个结点
+	p->prior->next = s;       //原来p的前一个结点的后驱指针指向s
+	s->next = p;              //s的后驱指针指向p
+	p->prior = s;             //p的前驱指针指向s;完成插入！
+	return OK;
+}
+
+/*删除链表中值为n的元素*/
+Status DeleteDLinkList(DLinkList head, DLinkList tail,int i,ElemType &data) {
+	int count = 0;
+	int flag = 0;
+	DLinkList p = head;
+	if (i <= 0 || i > DListLength(head, tail)) {
+		return ERROR;
+	}
+	while (count < i ) {
+		p = p->next;
+		count++;
+		if (count == i ) {
+			flag = 1;
+			break;
+		}
+	}
+	if (p == NULL || flag == 0) {
+		printf("该数据不存在！");
+		return ERROR;
+	}
+	else {
+		p->next->prior = p->prior;
+		p->prior->next = p->next;
+		data = p->data;
+		free(p);
+	}
+	return OK;
+}
+
+/*正序打印链表*/ 
+void PrintDLinkList(DLinkList head, DLinkList tail) {
+	DLinkList pmove = head->next;
+	while (pmove != tail) {
+		printf("%d ", (int)pmove->data);
+		pmove = pmove->next;
+	}
+	printf("\n");
+}
+
+/*主页面*/
+void menu(DLinkList head,DLinkList tail) {
+	int choose;
+	int n;
+	ElemType data;
+	printf("--------------------------------------------------------------\n");
+	printf("                          双链表                              \n");
+	printf("--------------------------------------------------------------\n");
+	printf("**************************************************************\n");
+	printf("                        1.插入结点                            \n");
+	printf("                        2.删除结点                            \n");
+    printf("                        3.链表判空                            \n");
+	printf("                        4.链表长度                            \n");
+    printf("                        5.遍历链表                            \n");
+	printf("                        6.销毁链表                            \n");
+	printf("                        0.退出程序                            \n");
+	printf("**************************************************************\n");
+	printf("--------------------------------------------------------------\n");
+	printf("请根据需要按照提示键入数字代号:");
+	n=scanf("%d", &choose);
+	while(n == 0) {             //输入了数字以外的其他字符
+		while (getchar() != '\n');   //清空缓存区
+		printf("亲，您输入的不是数字哦！！");
+		printf("请重新输入数字：");
+		n = scanf("%d", &choose);
+	}
+	int i;
+	switch (choose) {
+	case 1:
+		float set1;
+		printf("请输入在第几个结点之前插入新结点：");
+		scanf("%f", &set1);
+		printf("请输入要插入结点的数据：");
+		scanf("%f", &data);
+		if (TailInsertDLinkList(head, tail, (int)set1, data)) {
+			printf("操作成功！\n");
+		}
+		else {
+			printf("操作失败！！请根据链表长度输入正确的数据\n");
+		}
+		break;
+	case 2:
+		float set2;
+		printf("请输入要删除的结点的序号：");
+		scanf("%f", &set2);
+		if (DeleteDLinkList(head, tail, (int)set2, data)) {
+			printf("成功删除第%d个结点，其值为%d\n", (int)set2, (int)data);
+		}
+		else {
+			printf("操作失败！！请根据链表长度输入正确的数据\n");
+		}
+		break;
+	case 3:
+		if (EmptyLinkList(head, tail)) {
+			printf("这是一个空的链表！\n");
+		}
+		else {
+			printf("这不是一个空的链表！\n");
+		}
+		break;
+	case 4:
+		printf("该双向链表的长度为：%d\n", DListLength(head, tail));
+		break;
+	case 5:
+		printf("正序输出链表：");
+		PrintDLinkList(head, tail);
+		break;
+	case 6:
+		i= DListLength(head, tail);
+		while (DeleteDLinkList(head, tail, i, data)) {
+			i--;
+		}
+		printf("链表已被销毁！！\n");
+		break;
+	case 0:
+		k = 0;
+		printf("程序已退出！\n");
+		system("pause");
+		break;
+	default:printf("请在0-5之间选择！\n");
+	}
+}
+
+int main() {
+	DLinkList head, tail;//头指针和尾指针
+	float lenth;
+	int num;
+	ElemType data;
+	if (InitDLinkList(&head, &tail)) {//初始化双向链表
+		printf("双链表构造成功！\n");
+	}
+	else {
+		printf("空的线性双链表构造失败，退出程序！\n");
+	}
+	printf("请输入双链表的长度：");
+	num = scanf("%f", &lenth);
+	while(num == 0) {
+		while (getchar() != '\n');
+		printf("亲，您输入的不是数字哦！！");
+		printf("请重新输入双链表的长度：");
+		num=scanf("%f", &lenth);
+	}
+	for (int i = 1; i <= (int)lenth; i++) {
+		printf("请输入第%d个数据:", i);
+		scanf("%f", &data);
+		TailInsertDLinkList(head, tail, i, data); //在第i个节点前插入data
+	}
+	while (k) {
+		menu(head, tail);
+	}
+	return 0;
+}
