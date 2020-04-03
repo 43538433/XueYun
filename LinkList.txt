@@ -1,0 +1,319 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define OK 1;
+#define ERROR 0;
+#define TRUE 1;
+#define FALSE 0;
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
+#pragma warning(disable:4996);
+
+int k = 1;
+
+typedef float ElemType;
+typedef int Status;
+typedef struct LNode {
+	ElemType data;
+	struct LNode*next;
+}LNode, *LinkList;
+
+Status compare(ElemType e1, ElemType e2) {
+	if (e1 == e2) {
+		return 0;
+	}
+	else if (e1 > e2) {
+		return 1;
+	}
+	else {
+		return -1;
+	}
+}
+
+Status equal(ElemType c1, ElemType c2) {
+	if (c1 == c2) {
+		return TRUE;
+	}
+	else {
+		return ERROR;
+	}
+}
+
+void visit(ElemType e) {
+	printf("%d  \n", (int)e);
+}
+
+void print(ElemType c) {
+	printf("%d  ", (int)c);
+}
+
+/*构造一个空的线性链表L */
+void InitList(LinkList &L) {
+	L = (LinkList)malloc(sizeof(LNode));   //产生头节点，并使L指向此头节点
+	if (!L) {                              //如果构造失败
+		printf("空的线性表构造失败，退出程序！\n");
+	}
+	L->next = L;
+}
+
+/*摧毁单循环链表L*/
+Status DestroyList(LinkList &L) {
+	LinkList q;
+	LinkList p = L->next;
+	while (p != L) {
+		q = p->next;
+		free(p);
+		p = q;
+	}
+	free(L);
+	L = NULL;
+	return TRUE;
+}
+
+/*将链表L重置为空表*/
+Status ClearList(LinkList &L) {
+	LinkList p, q;
+	L = L->next;                          //L指向头节点
+	p = L->next;                          //p指向第一个节点
+	while (p != L) {                      //如果还没到尾节点
+		q = p->next;
+		free(p);
+		p = q;
+	}
+	L->next = L;                          //头节点指针域指向自身
+	return 0;
+}
+
+/*链表的判空*/
+Status ListEmpty(LinkList L) {
+	if (L->next == L) {
+		return TRUE;
+	}
+	return FALSE;
+}
+
+/*测量链表的长度*/
+int ListLength(LinkList L) {
+	int i = 0;
+	LinkList p = L->next;
+	while (p != L) {
+		i++;
+		p = p->next;
+	}
+	return i;
+}
+
+/*查看链表位序的结点*/
+int GetElem(LinkList L, int i, ElemType &e) {
+	int count = 1;
+	LinkList p = L->next->next;         //p指向第一个节点
+	if (i <= 0 || i > ListLength(L)) {
+		return ERROR;
+	}
+	while (count < i) {
+		//顺时针向后查找，直到p指向第i个元素
+		p = p->next;
+		count++;
+	}
+	e = p->data;     //取第i个元素
+	return OK;
+}
+
+/*返回L中第一个与e满足关系compare()的数据元素的位序*/
+Status LocateElem(LinkList L, ElemType e, Status(*compare)(ElemType, ElemType)) {
+	int i = 0;
+	LinkList p = L->next->next;   //p指向第一个节点
+	while (p != L->next) {
+		i++;
+		if (compare(p->data, e)) {
+			return i;
+		}
+		p = p->next;
+	}
+	return 0;
+}
+
+/*在L的第i个位置之前插入元素e*/
+Status ListInsert(LinkList &L, int i, ElemType e){
+	LinkList s;
+	LinkList p = L->next;				//p指向头结点
+	int count = 0;
+	if (i<0 || i>ListLength(L) + 1)		//无法在第i个元素前插入
+		return ERROR;
+	while (count < i - 1)				//寻找第i-1个结点				
+	{
+		p = p->next;
+		count++;
+	}
+	s = (LinkList)malloc(sizeof(LNode));		//生成新结点
+	s->data = e;								//插入L中
+	s->next = p->next;
+	p->next = s;
+	if (p == L)							//改变尾结点
+		L = s;
+	return OK;
+}
+
+/*删除L的第i个元素，并由e返回其值*/
+Status ListDelete(LinkList &L, int i, ElemType &e) {
+	LinkList p = L->next, q;
+	int count = 0;
+	if (i <= 0 || i > ListLength(L)) {
+		return ERROR;
+	}
+	while (count < i - 1) {
+		p = p->next;
+		count++;
+	}
+	q = p->next;
+	p->next = q->next;
+	e = q->data;
+	if (L == p) {
+		L = p;   
+	}
+	free(q);
+	return OK;
+}
+
+/*依次对每个数据元素调用函数visit()*/
+void ListTraverse(LinkList L, void(*visit)(ElemType)) {
+	LinkList p = L->next->next;
+	while (p != L->next) {
+		visit(p->data);
+		p = p->next;
+	}
+	printf("\n");
+}
+
+//主页面
+void menu(LinkList &L) {
+	int choose;
+	int num;
+	ElemType e;
+	printf("--------------------------------------------------------------\n");
+	printf("                          单链表                              \n");
+	printf("--------------------------------------------------------------\n");
+	printf("**************************************************************\n");
+	printf("                        1.插入结点                            \n");
+	printf("                        2.删除结点                            \n");
+	printf("                        3.链表判空                            \n");
+	printf("                        4.遍历链表                            \n");
+	printf("                        5.销毁链表                            \n");
+	printf("                        6.查询位序结点                        \n");
+	printf("                        7.查询结点位序                        \n");
+	printf("                        8.链表长度                            \n");
+	printf("                        0.退出程序                            \n");
+	printf("**************************************************************\n");
+	printf("--------------------------------------------------------------\n");
+	printf("请根据需要按照提示键入数字代号:");
+	int i;
+	num = scanf("%d", &choose);
+	while (num == 0) {          //输入数字以外的其他字符
+		while (getchar() != '\n'); //清空缓存区
+		printf("亲，您输入的不是数字哦！！");
+		printf("请重新输入数字：");
+		num = scanf("%d", &choose);
+	}
+	switch (choose) {
+	case 1:
+		float set1;
+		printf("请输入在第几个结点之前插入新结点：");
+		scanf("%f", &set1);
+		printf("请输入要插入结点的数据：");
+		scanf("%f", &e);
+		if (ListInsert(L, (int)set1, e)) {
+			printf("操作成功！\n");
+		}
+		else {
+			printf("操作失败！！请根据链表的长度输入正确的数据！\n");
+		}
+		break;
+	case 2:
+		float set2;
+		printf("请输入要删除的结点的序号：");
+		scanf("%f", &set2);
+		if (ListDelete(L, (int)set2, e)) {
+			printf("成功删除第%d个结点，其值为%d\n", (int)set2, (int)e);
+		}
+		else {
+			printf("操作失败！！请根据链表的长度输入正确的数据！\n");
+		}
+		break;
+	case 3:
+		if (ListEmpty(L)) {
+			printf("这是一个空的链表！\n");
+		}
+		else {
+			printf("这不是一个空的链表！\n");
+		}
+		break;
+	case 4:
+		printf("正序输出链表：");
+		ListTraverse(L, print);
+		break;
+	case 5:
+		if (DestroyList(L)) {
+			printf("链表已被销毁，程序自动退出！\n");
+			system("pause");
+			k = 0;
+		}
+		break;
+	case 6:
+		float set3;
+		printf("请输入链表中的一个元素：");
+		scanf("%f", &set3);
+		if (LocateElem(L, (int)set3, equal)) {
+			printf("元素%d是链表中的第%d个结点\n", (int)set3, LocateElem(L, (int)set3, equal));
+		}
+		else {
+			printf("操作失败！！链表中不存在元素%d\n", (int)set3);
+		}
+		break;
+	case 7:
+		float set4;
+		printf("请输入要查询链表位序的值：");
+		scanf("%f", &set4);
+		if (GetElem(L, (int)set4, e)) {
+			printf("链表的第%d个元素的值为%d\n", (int)set4, (int)e);
+		}
+		else {
+			printf("操作失败！！请根据链表的长度输入正确的数据\n");
+		}
+		break;
+	case 8:
+		i = ListLength(L);
+		printf("该链表的长度为：%d\n", i);
+		break;
+	case 0:
+		k = 0;
+		printf("已退出！\n");
+		break;
+	default:printf("请在0-8之间选择！\n");
+	}
+}
+
+int main() {
+	float lenth;
+	int num;
+	LinkList L;
+	ElemType e;
+	InitList(L);     //初始化单循环链表
+	printf("单循环链表构造成功！\n");
+	printf("请输入单循环链表的长度：");
+	num = scanf("%f", &lenth);
+	while (num == 0) {
+		while (getchar() != '\n');
+		printf("亲，您输入的不是数字哦！！");
+		printf("请重新输入单循环链表的长度：");
+		num = scanf("%f", &lenth);
+	}
+	for (int i = 1; i <= (int)lenth; i++) {
+		printf("请输入第%d个整型数据:", i);
+		scanf("%f", &e);
+		ListInsert(L, i, e);     //在第i个结点前插入e
+	}
+	while (k) {
+		menu(L);
+	}
+	return 0;
+}
