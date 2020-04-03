@@ -1,0 +1,148 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
+#pragma warning(disable:4996);
+
+typedef float ElemType;
+typedef int Status;
+typedef struct LNode {
+	ElemType data;
+	struct LNode*next;
+}LNode, *LinkList;
+
+/*构造一个空的线性链表L*/
+void InitList(LinkList &L) {
+	L = (LinkList)malloc(sizeof(LNode));
+	if (!L) {
+		printf("空的线性链表构造失败，退出程序！\n");
+	}
+	L->next = L;
+}
+
+/*测量链表的长度*/
+int ListLength(LinkList L) {
+	int i = 0;
+	LinkList p = L->next;
+	while (p != L) {
+		i++;
+		p = p->next;
+	}
+	return i;
+}
+
+void ChangeList(LinkList L,int i) {
+	LinkList p = L->next;
+	LinkList temp = L;
+	int count = 0;
+	while (count < i) {
+		p = p->next;
+		count++;
+	}
+	temp->data = p->data;
+	p = p->next;
+	printf("%d->%d->", (int)p->data,(int)temp->data);
+}
+
+/*获得链表位序的结点值*/
+int GetElem(LinkList L, int i, ElemType &e) {
+	int count = 1;
+	LinkList p = L->next->next;         //p指向第一个节点
+	if (i <= 0 || i > ListLength(L)) {
+		return 0;
+	}
+	while (count < i) {
+		//顺时针向后查找，直到p指向第i个元素
+		p = p->next;
+		count++;
+	}
+	e = p->data;     //取第i个元素
+	return 1;
+}
+
+/*在L的第i个位置之前插入元素data*/
+Status ListInsert(LinkList &L, int i, ElemType data) {
+	LinkList s;
+	LinkList p = L->next;
+	int count = 0;
+	if (i<0 || i>ListLength(L) + 1) {
+		return 0;
+	}
+	while (count < i - 1) {
+		p = p->next;
+		count++;
+	}
+	s = (LinkList)malloc(sizeof(LNode));
+	s->data = data;
+	s->next = p->next;
+	p->next = s;
+	if (p == L) {
+		L = s;
+	}
+	return 1;
+}
+
+int main() {
+	float lenth;
+	int num;
+	LinkList L;
+	ElemType data, data1, data2;
+	InitList(L);   //初始化单循环链表
+	
+	printf("单链表构造成功！\n");
+	printf("请输入链表的长度：");
+	num = scanf("%f", &lenth);
+	while (num == 0) {
+		while (getchar() != '\n');
+		printf("亲，您输入的不是数字哦！！");
+		printf("请重新输入链表的长度：");
+		num = scanf("%f", &lenth);
+	}
+	for (int i = 1; i <= (int)lenth; i++) {
+		printf("请输入第%d个整型数据：",i);
+		scanf("%f", &data);
+		ListInsert(L, i, data);
+	}
+	LinkList p = L->next->next;
+	printf("intput:");
+	while (p != L->next) {
+		printf("%d", (int)p->data);
+		p = p->next;
+		if (p != L->next) {
+			printf("->");
+		}
+	}
+	printf("\n");
+	if ((int)lenth % 2 == 0) {
+		GetElem(L, (int)(lenth / 2), data1);
+		GetElem(L, (int)(lenth / 2) + 1, data2);
+		printf("链表的中间结点值为：%d  %d\n", (int)data1, (int)data2);
+	}
+	else {
+		GetElem(L, (int)(lenth / 2) + 1, data);
+		printf("链表的中间结点值为：%d\n", (int)data);
+	}
+
+	LinkList m = L->next;
+	int count = 0;
+	printf("output:");
+	if ((int)lenth % 2 == 0) {
+		for (int j = 1; j <= ListLength(L) - 1; j = j + 2) {
+			ChangeList(L, j);
+		}
+		printf("\n");
+	}
+	else {
+		for (int k = 1; k <= ListLength(L) - 1; k = k + 2) {
+			ChangeList(L, k);
+		}
+		while (count < lenth) {
+			m = m->next;
+			count++;
+		}
+		printf("%d", (int)m->data);
+		printf("\n");
+	}
+	system("pause");
+	return 0;
+}
