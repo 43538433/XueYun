@@ -1,0 +1,6 @@
+﻿  源.cpp
+e:\vs---project\calculator\calculator\源.cpp(10): warning C4081: 应输入“newline”；找到“;”
+e:\vs---project\calculator\calculator\源.cpp(47): warning C4101: “n”: 未引用的局部变量
+e:\vs---project\calculator\calculator\源.cpp(202): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+e:\vs---project\calculator\calculator\源.cpp(263): warning C4101: “j”: 未引用的局部变量
+  Calculator.vcxproj -> E:\VS---Project\Calculator\Debug\Calculator.exe
