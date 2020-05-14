@@ -1,0 +1,130 @@
+#login_wrap {
+    width:100%;
+    min-width: 1500px;
+    overflow: hidden;
+    position: relative;
+}
+.fullscreen-bg{
+    width: 100%;
+    height: 753px;
+    background: url(../images/school01.jpg) no-repeat center;
+    background-size: 100% 100%;
+    overflow: hidden;
+}
+.login-box {
+    width: 570px;
+    height: 500px;
+    position: absolute;
+    top: 120px;
+    right:480px;
+    background-color: rgba(238, 229, 184, 0.41);
+    border:14px solid rgba(136, 161, 238, 0.39);
+
+}
+.title p:first-child{
+    font-size: 30px;
+    color: #ffb22e;
+    position: center;
+    padding-top:20px;
+    padding-left: 50px;
+}
+
+.title img {
+    float: left;
+    margin-top: 12px;
+    margin-right: 15px;
+}
+.login_inner {    
+    overflow: hidden;
+    padding: 10px 50px;
+}
+
+.alert {
+    margin: 0 auto;
+    padding: 6px 10px;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+.login_inner form{
+    width: 100%;
+    overflow: hidden;
+    padding-bottom: 20px;
+
+}
+.login_inner input {
+    width: 290px;
+    height: 48px;
+    border: 1px solid #a6a6a6;
+    font-size: 16px;
+    color: #666;
+    line-height: 32px;
+    padding: 16px 20px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 0 5px #88a1ee;
+    outline: none;
+    transition: box-shadow 0.25s linear 0s;
+    -webkit-transition: box-shadow 0.25s linear 0s;
+    margin-bottom: 20px;
+}
+
+.tb_left{
+    width: 130px;
+    text-align: right;
+    font-size: 18px;
+    padding: 6px 8px;
+}
+
+.verify input {
+    width: 95px;
+    margin-right: 20px;
+    float: right;
+    margin-bottom: 0;
+}
+
+.submit_btn button {
+    width: 120px;
+    height: 40px;
+    border: none;
+    background-color: #ffcb52;
+    text-align: center;
+    line-height: 40px;
+    color: rgba(0, 0, 0, 0.58);
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    float: left;
+}
+.auto_login {
+   margin-top: 20px;
+}
+.submit_btn .checkbox {
+    display: block;
+    float: right;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    position: absolute;
+    background: rgba(240,84,77,1);
+    margin: 10px 10px 0 154px;
+}
+.submit_btn  span {
+    line-height: 35px;
+    margin: 10px 10px 0 70px;
+}
+
+.reg {
+    border-top: 1px solid #eeeeee;
+    margin-top: 15px;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background: rgba(221, 156, 193, 0.42);
+    text-align: center;
+    font-size: 16px;
+}
+.reg a {
+    color: #ff6c1d;
+}

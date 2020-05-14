@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>注册</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" href="css/register.css">
+    <!--导入jquery-->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <!--导入将jq对象转换为json字符串插件-->
+    <script type="text/javascript" src="js/json.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //1.给“注册”按钮注册点击事件
+            $("#registerBtn").click(function () {
+                //提交异步的注册用户请求给后端
+                $.post({
+                    url:"UserServlet",
+                    data:$("#registerForm").serialize(),//表单注册的用户数据+请求标识符action
+                    success:function (result) {
+
+                        //4.获取服务器异步请求返回的结果
+                        if(result=="true"){
+                            //结果1：返回true，代表注册成功跳转到register_ok.html
+                            location.href="register_ok.html";
+                        }else{
+                            //结果2：返回注册失败的消息，更新到页面上显示让用户解决
+                            $("#msg").html(result);
+                        }
+
+                    },
+                    error:function () {
+                        //结果3：返回系统异常，在error回调函数中弹出服务器忙
+                        alert("服务器忙");
+                    }
+                });
+
+            });
+        });
+    </script>
+
+</head>
+<body>
+<div class="rg_layout">
+    <div class="rg_form clearfix">
+        <div class="rg_form_left">
+            <p>新用户注册</p>
+            <p>USER REGISTER</p>
+        </div>
+        <div class="rg_form_center">
+            <!--注册表单-->
+            <form id="registerForm" method="post">
+
+                <!--增加一个表单项存储请求标识符数据action-->
+                <input type="hidden" name="action" value="register">
+
+                <table style="margin-top: 25px;">
+                    <tr>
+                        <td class="td_left">
+                            <label for="name">姓名</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="text" id="name" name="name" placeholder="请输入真实姓名">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left">
+                            <label for="password">密码</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="text" id="password" name="password" placeholder="请设置您的密码">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left">
+                            <label for="tel">手机号</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="text" id="tel" name="tel" placeholder="请输入您的手机号">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left">
+                            <label for="sid">工学号</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="text" id="sid" name="sid" placeholder="请输入工学号">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left">
+                            <label for="colloge">学院</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="text" id="colloge" name="colloge" placeholder="请输入所在学院">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left">
+                            <label for="grade">专业</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="text" id="grade" name="grade" placeholder="请输入您的专业">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left">
+                        </td>
+                        <td class="td_right check">
+                            <input id="registerBtn" type="button" class="submit" value="注册">
+                            <span id="msg" style="color: rgba(251,62,40,0.8);font-size: 20px"></span>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="rg_form_right">
+            <p>
+                已有账号？
+                <a href="login.html">立即登录</a>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+.head.head_right{
+    font-size: 500px;
+    color: #de1731;
+    float: right;
+    padding-top:2000px;
+    padding-left: 500px;
+}
+.content_body>.center_left{
+    padding-left: 36px;
+    box-sizing: border-box;
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <link rel="shortcut icon" href="images/bitbug_favicon.ico" type="image/x-icon" />
+    <!--导入jquery-->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <!--导入json转换js-->
+    <script src="js/json.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+
+            //1.给“登录”按钮注册点击事件
+            $("#loginBtn").click(function () {
+
+                //2.提交登录的异步请求
+                $.post({
+                    url:"UserServlet",
+                    data:$("#loginForm").serialize(),
+                    success:function (result) {
+
+                        //3.获取返回结果
+                        if(result=="true"){
+                            location.href = "login_ok.html";
+                        }else{
+                            //结果2：返回登录失败消息，显示出来
+                            $("#errorMsg").html(result);
+                        }
+
+                    },
+                    error:function () {
+                        //结果3：返回系统异常，在error回调函数处理
+                        alert("服务器忙,请稍后再试...");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+
+<section id="login_wrap">
+    <div class="fullscreen-bg" style="background-image: url(images/school01.jpg)"></div>
+    <div class="login-box">
+        <div class="title">
+
+            <p>欢迎登录导师预约系统</p>
+        </div>
+        <div class="login_inner">
+            <!--登录错误提示消息-->
+            <div id="errorMsg" class="alert alert-danger" ></div>
+            <form id="loginForm" method="post">
+
+                <!--增加action参数-->
+                <input type="hidden" name="action" value="login">
+
+                <span class="tb_left">姓名&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <input name="name" type="name" placeholder="姓名" autocomplete="off"></br>
+
+                <span class="tb_left">工学号&nbsp;</span>
+                <input name="sid" type="sid" placeholder="工学号" autocomplete="off"></br>
+
+                <span class="tb_left">密码&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <input name="password" type="password" placeholder="密码" autocomplete="off"></br>
+
+                <div class="submit_btn">
+                    <button type="button" id="loginBtn">登录</button>
+                    <div class="auto_login">
+                        <input type="checkbox"  class="checkbox">
+                        <span>自动登录</span>
+                    </div>
+                </div>
+            </form>
+            <div class="reg">没有账户？<a href="register.html">立即注册</a></div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
